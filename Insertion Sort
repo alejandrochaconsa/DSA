@@ -1,0 +1,55 @@
+// Insertion Sort
+
+// It's a sortin algorithm where elements of an array are compared starting with index 1. The element being compared is stored in a temp variable and is compared to the elements to the left
+// of the array. If the element to the left is smaller then we shift that element to the right and continue to compare until we there are no more elements to the left to compare to.
+// If the element is greater to the item on the left, then we place the element back in the array and continue iterating the rest of the elements.
+
+// Runtime Complexity: O(n^2) - the larger the dataset, the more ineficient this algorithm will be.
+// Use for a small dataset... NOT for a big dataset
+
+// Source:https://www.youtube.com/watch?v=8mJ-OhcfpYg
+// Fiddle: https://dotnetfiddle.net/Rq4ZhC using for loop  
+// Fiddle: https://dotnetfiddle.net/8GvRcL using while loop
+
+using System;
+					
+public class Program
+{
+	public static void Main()
+	{	
+		int[] array = {2,3,1,4,5,7,8,6,9};
+	
+		
+		Console.WriteLine("Array before sorting:");
+		for(int i = 0; i < array.Length; i++){
+			Console.Write(array[i]);
+		}
+		
+		InsertionSort(ref array);
+		
+		Console.WriteLine("\nArray after sorting:");
+		for(int i = 0; i < array.Length; i++){
+			Console.Write(array[i]);
+		}
+	}
+	
+	public static void InsertionSort(ref int[] array){
+		int tempElement = -1;
+		Console.WriteLine("\n");
+
+		// Start iterating at element 1 to compare against index 0 which is the left element
+		for(int i=1; i < array.Length; i++){
+			
+			tempElement = array[i];
+			
+			int j = i-1;
+			for(; j>=0 && array[j] > tempElement; j--){
+				if(tempElement < array[j]){
+					array[j+1] = array[j];
+				}
+			}
+			array[j + 1] = tempElement;
+			
+		}
+	}
+}
