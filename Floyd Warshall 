@@ -1,0 +1,37 @@
+using System;
+
+class Program {
+    static void Main() {
+        int INF = 99999; // Representation of infinity
+        int[,] graph = {
+            { 0,   4,   11 },
+            { INF, 0,   2  },
+            { INF, INF, 0 }
+        };
+
+        int n = graph.GetLength(0);
+
+        // Floyd-Warshall
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (graph[i, k] + graph[k, j] < graph[i, j]) {
+                        graph[i, j] = graph[i, k] + graph[k, j];
+                    }
+                }
+            }
+        }
+
+        // Print results
+        Console.WriteLine("Shortest distances between all pairs:");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (graph[i, j] == INF)
+                    Console.Write("INF ");
+                else
+                    Console.Write(graph[i, j] + "   ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
