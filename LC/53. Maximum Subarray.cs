@@ -1,6 +1,6 @@
 public class Solution {
 
-    // Notes from self: Alejo, your solution(Solution 1) below did ok, for a small array but once it grew you got a TLE error because the 
+    // Notes to self: Alejo, your solution(Solution 1) below did ok, for a small array but once it grew you got a TLE error because the 
     // time complexity: O(n^2) since it grows exponentially for every level. 
     // There's a way to tackle this problem with an algorithm you didn't know about: Kadane’s Algorithm — Time Complexity: O(n)
     // After debugging using the code below, you understand what is doing, but never in a million years, you would have been able to come up with such algorithm
