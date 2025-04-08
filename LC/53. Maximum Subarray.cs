@@ -60,18 +60,16 @@ public class Solution {
         }
 
         int indexA = 0;
-        int indexB = level - 1;
 
         int sum = Int32.MinValue;
 
         int[] subArray = new int[level];
         
-        while(indexB < nums.Length){
+        while(indexA + level <= nums.Length){
 
             Array.Copy(nums, indexA, subArray, 0, level);
             sum = Math.Max(sum, subArray.Sum());
             indexA++;
-            indexB++;
         }
  
         return Math.Max(sum, HelperMaxSubArray(nums, level - 1));
