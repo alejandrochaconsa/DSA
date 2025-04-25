@@ -1,56 +1,92 @@
 public class Solution {
-    public bool CanConstruct(string ransomNote, string magazine) {
+    public IList<string> SummaryRanges(int[] nums) {
+
         // What do I know?
-        // There are 2 strings being passed as params
-        // We must return a bool based on weather we can construct ransomNote out of magazine param, without REUSING characters
-        // Both params contain letters in the alphabet so only 26 characters available (no spaces)
+        // There's 1 param, whithc is an array of integers and it's SORTED AND UNIQUE
+        // Range is a set of integers where a,b are inclusive
+        // Array can have ZERO elements, up to 20. 0 <= nums.length <= 20
+        // Integers in the array can be negative or positive. -231 <= nums[i] <= 231 - 1
+        // Array is sorted ascenting
 
-        // What can I do?
-        // Can I use a data structure? Prob a Dictionary for the chars in magazine and then iterate through ransomNote and subtract amount from dictionary every time
-        // a char matches. If there are no matches or we ran out of an existent char then return false. (Needs 2 iteration, one for the dictionary and one for the ransomNote)
-        // Can I do it without a data structure? Maybe, by using magazine.IndexOf and then removing that Char At the given index if it exists of course. (Needs 1 iteration)
+        // How can I approach this?
+        // Iterating through nums just once will give me a time complexity of O(n)
+        // I would know if an integer is in the range if it is equal to the previus number plus 1. current = previous + 1
+        // If current != previous + 1, start a new range
+        // Is there a data structure or algorithm that could make my life easier? 
+        //  I think we just need a variable to store previous integer (if anything)
+        // Does SORTED AND UNIQUE give a clue that I should use a specific algorithm? Maybe binary search? But this won't tell me
+        // if all integers are part of the range
 
-        // Solution 1
-        // Notes to self: Alejo, after submission, the answer was accepted, but Runtime was 19ms, it seems there's a faster way to do this, IndexOf may be your bottle neck
-        // Time Complexity: O(n) where n is the amount of characters in ransomNote
-        // Space Complexity: O(1) constant because we're only storing the index of 1 character at the time.
-        // foreach(Char character in ransomNote){
-        //     // Console.WriteLine(character);
-        //     int indexOfChar = magazine.IndexOf(character);
+        // Test cases
+        // []
+        // [1]
+        // [0,1]
+        // [0,1,2]
+        // [0,1,2,4]
+        // [0,2,4,6,8] 
+        
+        // Let's go!
 
-        //     if(indexOfChar == -1){
-        //         return false;
+        // After refactoring
+        IList<string> resultList = new List<string>();
+        if(nums.Length == 0) return resultList;
+        
+        int start = nums[0];
+        for (int i = 1; i <= nums.Length; i++)
+        {
+            // Either end of array or gap in range
+            if (i == nums.Length || nums[i] != nums[i - 1] + 1)
+            {
+                if (start == nums[i - 1])
+                    resultList.Add(start.ToString());
+                else
+                    resultList.Add($"{start}->{nums[i - 1]}");
+
+                if (i < nums.Length)
+                    start = nums[i];
+            }
+        }
+
+        return resultList;
+ 
+        // Before refactoring
+        // IList<string> resultList = new List<string>();
+        // if(nums.Length == 0) return resultList;
+        
+        // int prevNumber = 0;
+        // int? currentRange = null;
+        // for(int i = 0; i < nums.Length; i++){
+
+        //     if(currentRange == null){
+        //         currentRange = nums[i];
         //     }
-        //     magazine = magazine.Remove(indexOfChar,1);
-        //     // Console.WriteLine(magazine);
+        //     else if(nums[i] == prevNumber + 1){
+        //         prevNumber = nums[i];
+        //         continue;
+        //     }
+        //     else{
+        //         // TODO: refactor
+        //         if(currentRange == prevNumber){
+        //             resultList.Add(currentRange.ToString());
+        //         }
+        //         else{
+        //             resultList.Add(currentRange.ToString() + $"->{prevNumber}");
+        //         }
+        //         currentRange = nums[i];
+
+        //     }
+        //     prevNumber = nums[i];
         // }
 
-        // return true;
+        // // TODO: May need to refactor this
+        // if(currentRange != null && currentRange == prevNumber){
+        //     resultList.Add(currentRange.ToString());
+        // }
+        // else{
+        //     resultList.Add(currentRange.ToString() + $"->{prevNumber}");
+        // }
 
-        // Solution 2
-        // Time Complexity: O(n) Linear, where n is the size of ransomNote
-        // Space Complexity: O(m) Linear, where m is the size of magazine
-        // Notes to self: Alejo, although we sacrifice on space, the performance as a lot better on the 2nd solution using the dictionary
-        // by cutting runtime down to 8ms (more than half)
-        Dictionary<Char,int> myDictionary = new Dictionary<Char,int>();
-        foreach(Char characterInMagazine in magazine){
-            
-            if(myDictionary.ContainsKey(characterInMagazine)){
-                myDictionary[characterInMagazine]++;
-                continue;
-            }
-            myDictionary.Add(characterInMagazine, 1);
-        }
-
-        foreach(Char characterInRansomNote in ransomNote){
-            if(myDictionary.ContainsKey(characterInRansomNote) && myDictionary[characterInRansomNote] > 0){
-                myDictionary[characterInRansomNote]--;
-            }
-            else{
-                return false;
-            }
-        }
-
-        return true;
+        // return resultList;
+        
     }
 }

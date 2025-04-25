@@ -1,56 +1,92 @@
 public class Solution {
-    public bool CanConstruct(string ransomNote, string magazine) {
+    public bool IsIsomorphic(string s, string t) {
         // What do I know?
-        // There are 2 strings being passed as params
-        // We must return a bool based on weather we can construct ransomNote out of magazine param, without REUSING characters
-        // Both params contain letters in the alphabet so only 26 characters available (no spaces)
+        // There are 2 string params s and t
+        // The function must return a bool true if the 2 strings in the params ar isomorphic
+        // NO TWO CHARACTERS may map to the same character, but a character may map to itself
+        // Constraints:
+        // 1 <= s.length <= 5 * 10,000 there will always be at least 1 character
+        // t.length == s.length, the lenght of both params is always the same
+        // s and t consist of any valid ascii character.
+        // They can be mapped in the same order only, example: "aab" "dcc"=false, but "aab" "ccd"=true
 
-        // What can I do?
-        // Can I use a data structure? Prob a Dictionary for the chars in magazine and then iterate through ransomNote and subtract amount from dictionary every time
-        // a char matches. If there are no matches or we ran out of an existent char then return false. (Needs 2 iteration, one for the dictionary and one for the ransomNote)
-        // Can I do it without a data structure? Maybe, by using magazine.IndexOf and then removing that Char At the given index if it exists of course. (Needs 1 iteration)
+        // What can I do? 
+        // Iterate through each character and start mapping
+        // Keep track of which character from s is mapped to which character in t
+        // if not mapped yet, keep going
+        // if mapped already and attempting to map to the same character, continue
+        // if mapped already and attempting to map to the different character, return false
+        // How can I keep track of the mappings? Dictionary<Char,Char>
+        // Example: "aab" "ccd" true
+        // Dictionary:
+        // a:c
+        // b:d
+        // Example: "aab" "cdf" false
+        // Dictionary:
+        // a:c
+        // a is already mapped so it cannot be mapped to d, therefore return false
 
-        // Solution 1
-        // Notes to self: Alejo, after submission, the answer was accepted, but Runtime was 19ms, it seems there's a faster way to do this, IndexOf may be your bottle neck
-        // Time Complexity: O(n) where n is the amount of characters in ransomNote
-        // Space Complexity: O(1) constant because we're only storing the index of 1 character at the time.
-        // foreach(Char character in ransomNote){
-        //     // Console.WriteLine(character);
-        //     int indexOfChar = magazine.IndexOf(character);
+        // Other Examples
+        // "a" "a"     true
+        // "a" "b"     true
+        // "ab" "cd"   true
+        // "aab" "ccd" true
+        // "aab" "cdf" false
+        // "aba" "cdc" true
+        
+        // Improvements: Add a try catch for exceptions, and logging purposes
 
-        //     if(indexOfChar == -1){
+        // Solution 1: Runtime is not as efficient as in Solution 2 below, but Time complexity is still O(n) at best or O(n^2) at worst because of 
+        // this lookup myDictionary.ContainsValue(currentT)
+       
+        // if(s.Length != t.Length){
+        //     return false;
+        // }  
+        // Dictionary<Char,Char> myDictionary = new Dictionary<Char,Char>();
+
+        // for(int i = 0; i < s.Length; i++){
+
+        //     Char currentS = s[i];
+        //     Char currentT = t[i];
+
+        //     Console.WriteLine(currentS);
+        //     if(!myDictionary.ContainsKey(currentS)){
+        //         if(myDictionary.ContainsValue(currentT)){
+        //             return false;
+        //         }
+        //         myDictionary.Add(currentS,currentT);
+        //     }
+        //     if(myDictionary[currentS] != currentT){
         //         return false;
         //     }
-        //     magazine = magazine.Remove(indexOfChar,1);
-        //     // Console.WriteLine(magazine);
         // }
 
         // return true;
 
-        // Solution 2
-        // Time Complexity: O(n) Linear, where n is the size of ransomNote
-        // Space Complexity: O(m) Linear, where m is the size of magazine
-        // Notes to self: Alejo, although we sacrifice on space, the performance as a lot better on the 2nd solution using the dictionary
-        // by cutting runtime down to 8ms (more than half)
-        Dictionary<Char,int> myDictionary = new Dictionary<Char,int>();
-        foreach(Char characterInMagazine in magazine){
-            
-            if(myDictionary.ContainsKey(characterInMagazine)){
-                myDictionary[characterInMagazine]++;
-                continue;
-            }
-            myDictionary.Add(characterInMagazine, 1);
-        }
 
-        foreach(Char characterInRansomNote in ransomNote){
-            if(myDictionary.ContainsKey(characterInRansomNote) && myDictionary[characterInRansomNote] > 0){
-                myDictionary[characterInRansomNote]--;
+        // Solution 2: Using 2 dictionaries, the Space complexity is still the same as in solution 1 if we remove the constant values, but Runtime is more efficient
+        if(s.Length != t.Length) return false;
+
+        Dictionary<Char,Char> dictionaryST = new Dictionary<Char,Char>();
+        Dictionary<Char,Char> dictionaryTS = new Dictionary<Char,Char>();
+
+        for(int i=0; i < s.Length; i++){
+            
+            if(!dictionaryST.ContainsKey(s[i])){
+                dictionaryST.Add(s[i],t[i]);
             }
-            else{
+            else if(dictionaryST[s[i]] != t[i]){
+                return false;
+            }
+            if(!dictionaryTS.ContainsKey(t[i])){
+                dictionaryTS.Add(t[i], s[i]);
+            }
+            else if(dictionaryTS[t[i]] != s[i]){
                 return false;
             }
         }
 
         return true;
-    }
+
+    }     
 }
