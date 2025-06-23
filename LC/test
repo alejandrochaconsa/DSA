@@ -1,0 +1,36 @@
+public class Solution {
+    public IList<IList<int>> Subsets(int[] nums) {
+        // What do I know? 
+        // elements are UNIQUE
+        // the solution must not contain duplicate subsets
+        // Solution can be in any order
+        // array must have at least 1 element and at most 10
+        // values in the array can be negative
+
+        // Approach:
+        // we can use recursion to solve this
+        // starting with an empty subset and iterating through all elements in the array
+        //                      []
+        //          1           2           3
+        //      12  13      23
+        //  123
+        IList<IList<int>> result = new List<IList<int>>();
+        if(nums.Length < 1 || nums.Length > 10) return result;
+
+        HelperSubsets(nums, result, new List<int>(), 0);
+        return result;
+    }
+
+    private static IList<IList<int>> HelperSubsets(int[] nums, IList<IList<int>> result, List<int> currentSubset, int startIndex){
+
+        result.Add(currentSubset);
+
+        for(int i = startIndex; i < nums.Length; i++){
+            currentSubset.Add(nums[i]);
+            HelperSubsets(nums, result, currentSubset, startIndex + 1);
+            currentSubset.RemoveAt(currentSubset.Count - 1);
+        }
+
+        return result;
+    }
+}
